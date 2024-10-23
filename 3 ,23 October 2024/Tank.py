@@ -4,11 +4,14 @@ class Tank:
     __count = 0#общее колчтчество изготовленных танка
     __SIZE = 100
     def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=10,
-                 file_up='./img/tank_up.png',
-                 file_down='./img/tank_down.png',
-                 file_left='./img/tank_left.png',
-                 file_right='./img/tank_right.png'  ):# init - инцилиатор
-
+                 file_up='../img/tank_up.png',
+                 file_down='../img/tank_down.png',
+                 file_left='../img/tank_left.png',
+                 file_right='../img/tank_right.png'  ):# init - инцилиатор
+        self.__skin_up = PhotoImage(file=file_up)
+        self.__skin_down = PhotoImage(file=file_down)
+        self.__skin_left = PhotoImage(file=file_left)
+        self.__skin_right = PhotoImage(file=file_right)
         self.__hitbox=Hitbox(x, y, Tank.__SIZE, Tank.__SIZE)
         self.__canvas = canvas#холст
         Tank.__count += 1
@@ -18,10 +21,6 @@ class Tank:
         self.__ammo = ammo
         self.__fuel = 100
         self.__speed = speed
-        self.__skin_up= PhotoImage(file=file_up),
-        self.__skin_down = PhotoImage(file=file_down)
-        self.__skin_left= PhotoImage(file=file_left)
-        self.__skin_right = PhotoImage(file=file_right)
         self.__x = x
         self.__y = y
         if self.__x < 0:
