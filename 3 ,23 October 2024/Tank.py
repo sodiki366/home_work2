@@ -2,7 +2,7 @@ from hitbox import Hitbox
 from tkinter import PhotoImage,NW
 class Tank:
     __count = 0#общее колчтчество изготовленных танка
-    __SIZE = 100
+    #__SIZE = 100
     def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=10,
                  file_up='../img/tank_up.png',
                  file_down='../img/tank_down.png',
@@ -12,23 +12,27 @@ class Tank:
         self.__skin_down = PhotoImage(file=file_down)
         self.__skin_left = PhotoImage(file=file_left)
         self.__skin_right = PhotoImage(file=file_right)
-        self.__hitbox=Hitbox(x, y, Tank.__SIZE, Tank.__SIZE)
+        self.__hitbox=Hitbox(x, y, self.get_size(), self.get_size())
         self.__canvas = canvas#холст
         Tank.__count += 1
         self.__model = model
         self.__hp= 100
         self.__xp = 0
         self.__ammo = ammo
-        self.__fuel = 100
+        self.__fuel = 10000
         self.__speed = speed
         self.__x = x
         self.__y = y
+
+        self.__vx = 0
+        self.__vy = 0
         if self.__x < 0:
            self.__x = 0
         if self.__y < 0:
             self.__y = 0
 
         self.__create()
+        self.right()
 
 
 
@@ -38,38 +42,43 @@ class Tank:
             self.__ammo -=1
             print('Стреляю')
     def forward(self):
-        if self.__fuel > 0:
-            self.__y += -self.__speed
-            self.__update_hitbox()
-            self.__fuel -= 1
-            self.__canvas.itemconfig(self.__id,image = self.__skin_up)
-            self.__repaint()
+        self.__vx = 0
+        self.__vy = -1
+        self.__canvas.itemconfig(self.__id,image = self.__skin_up)
+
     def backward(self):
-        if self.__fuel > 0:
-            self.__y += self.__speed
-            self.__update_hitbox()
-            self.__fuel -= 1
-            self.__canvas.itemconfig(self.__id, image=self.__skin_down)
-            self.__repaint()
+        self.__vx = 0
+        self.__vy = 1
+
+        self.__canvas.itemconfig(self.__id, image=self.__skin_down)
+
     def left(self):
-        if self.__fuel > 0:
-            self.__x += -self.__speed
-            self.__update_hitbox()
-            self.__fuel -= 1
-            self.__canvas.itemconfig(self.__id, image=self.__skin_left)
-            self.__repaint()
+        self.__vx = -1
+        self.__vy = 0
+        self.__canvas.itemconfig(self.__id, image=self.__skin_left)
+
     def right(self):
-        if self.__fuel > 0:
-            self.__x += self.__speed
+        self.__vx = 1
+        self.__vy = 0
+
+        self.__canvas.itemconfig(self.__id, image=self.__skin_right)
+
+
+    def update(self):
+        if self.__fuel > self.__speed:
+            self.__x += self.__vx + self.__speed
+            self.__y += self.__vy + self.__speed
+            self.__fuel -=self.__speed
             self.__update_hitbox()
-            self.__fuel -= 1
-            self.__canvas.itemconfig(self.__id, image=self.__skin_right)
             self.__repaint()
+
     def __create(self):
         self.__id = self.__canvas.create_image(self.__x,self.__y,
                                              image=self.__skin_up,anchor = NW)
+
     def __repaint(self):
         self.__canvas.moveto(self.__id, x = self.__x, y = self.__y)#передвижение танка по холсту
+
 
     def __update_hitbox(self):
         self.__hitbox.moveto(self.__x, self.__y)
@@ -96,13 +105,16 @@ class Tank:
     def get_speed(self):
         return self.__speed
 
-    @staticmethod
+   # @staticmethod
     def get_count():
         return Tank.__count
 
-    @staticmethod
+   # @staticmethod
     def get_size():
         return Tank.__SIZE
+
+    def get_size(self):
+        return self.__skin_up.width()
 
 
 
