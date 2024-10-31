@@ -19,7 +19,7 @@ class Tank:
         self.__hp= 100
         self.__xp = 0
         self.__ammo = ammo
-        self.__fuel = 10000
+        self.__fuel = 10000000000000000
         self.__speed = speed
         self.__x = x
         self.__y = y
@@ -41,10 +41,9 @@ class Tank:
         self.__fuel += self.__speed
         self.__update_hitbox()
         self.__repaint()
+        pass
 
-    def stop(self):
-        self.__vx = 0
-        self.__vy = 0
+
 
     def fire(self):
         if self.__ammo > 0:
@@ -74,10 +73,14 @@ class Tank:
 
 
     def update(self):
-        self.__dx = self.__vx * self.__speed
-        self.__dy = self.__vy * self.__speed
-        self.__x += self.__dx
-        self.__y += self.__dy
+        if self.__fuel > self.__speed:
+            self.__fuel -= self.__speed
+            self.__dx = self.__vx * self.__speed
+            self.__dy = self.__vy * self.__speed
+            self.__x += self.__dx
+            self.__y += self.__dy
+            self.__update_hitbox()
+            self.__repaint()
 
     def __create(self):
         self.__id = self.__canvas.create_image(self.__x,self.__y,
@@ -112,14 +115,11 @@ class Tank:
     def get_speed(self):
         return self.__speed
 
-   # @staticmethod
+    @staticmethod
     def get_count():
         return Tank.__count
 
    # @staticmethod
-    def get_size():
-        return Tank.__SIZE
-
     def get_size(self):
         return self.__skin_up.width()
 
