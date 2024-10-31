@@ -35,7 +35,16 @@ class Tank:
         self.right()
 
 
+    def undo_move(self):
+        self.__x -= self.__dx
+        self.__y -= self.__dy
+        self.__fuel += self.__speed
+        self.__update_hitbox()
+        self.__repaint()
 
+    def stop(self):
+        self.__vx = 0
+        self.__vy = 0
 
     def fire(self):
         if self.__ammo > 0:
@@ -65,12 +74,10 @@ class Tank:
 
 
     def update(self):
-        if self.__fuel > self.__speed:
-            self.__x += self.__vx + self.__speed
-            self.__y += self.__vy + self.__speed
-            self.__fuel -=self.__speed
-            self.__update_hitbox()
-            self.__repaint()
+        self.__dx = self.__vx * self.__speed
+        self.__dy = self.__vy * self.__speed
+        self.__x += self.__dx
+        self.__y += self.__dy
 
     def __create(self):
         self.__id = self.__canvas.create_image(self.__x,self.__y,
@@ -115,6 +122,8 @@ class Tank:
 
     def get_size(self):
         return self.__skin_up.width()
+
+
 
 
 
