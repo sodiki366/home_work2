@@ -3,7 +3,7 @@ from tkinter import PhotoImage,NW
 class Tank:
     __count = 0#общее колчтчество изготовленных танка
     #__SIZE = 100
-    def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=10,
+    def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=10000000000,
                  file_up='../img/tank_up.png',
                  file_down='../img/tank_down.png',
                  file_left='../img/tank_left.png',
