@@ -1,9 +1,26 @@
 class Hitbox:
-    def __init__(self,x,y,width,height):
+    def __init__(self,x,y,width,height,padding=0):
+        self.pad = padding
         self.__x = x
         self.__y =y
         self.__set_width(width)
         self.__set_height(height)
+
+    def __get_x(self):
+        return self.__x
+
+    def __set_x(self, x):
+        if x < 0:
+            x = 0
+        self.__x = x
+
+    def __get_y(self):
+        return self.__y
+
+    def __set_y(self, y):
+        if y < 0:
+            y = 0
+        self.__y = y
 
     def __get_width(self):
         return self.__width
@@ -19,55 +36,44 @@ class Hitbox:
             height = 0
         self.__height = height
 
-    def __get_x(self):
-        return self.__x
-
-    def __set_x(self,x):
-        if x < 0:
-            x = 0
-        self.__x = x
-
-    def __get_y(self):
-        return self.__y
-
-    def __set_y(self, y):
-        if y < 0:
-            y = 0
-        self.__y = y
-    def __get_top(self):
-        return self.y
-    def __get_bottom(self):
-        return self.y + self.height
-        self.__y = y
-
-    def __get_left(self):
-        return self.x
-    def __get_right(self):
-        return self.x + self.width
-
-    def moveto(self,x,y):
+    def moveto(self, x, y):
         self.__set_x(x)
         self.__set_y(y)
-    def move(self,dx,dy):
+
+    def move(self, dx, dy):
         self.__set_x(dx + self.__get_x())
         self.__set_y(dy + self.__get_y())
 
 
+    def __get_top(self):
+        return self.y + self.pad
+    def __get_bottom(self):
+        return self.y + self.height - self.pad
 
 
-    def __str__(self):
-        return (f'({self.__x =},{self.__y=},{self.__width =},{self.__height=})')
+    def __get_left(self):
+        return self.x + self.pad
+    def __get_right(self):
+        return self.x + self.width - self.pad
+
+
+
 
     def intersects(self,other):
+        #Другой левее
         if self.left > other.right:
             return False
-        if self.right < other.left:
+        #Другой выше
+        elif self.top < other.bottom:
             return False
-        if self.top > other.bottom:
+        #Другой правее
+        elif self.right > other.left:
             return False
+        #Другой ниже
         if self.bottom < other.top:
             return False
-        return True
+        else:
+            return True
 
     x = property(__get_x,__set_x)
     y = property(__get_y, __set_y)
@@ -78,3 +84,6 @@ class Hitbox:
     bottom = property(__get_bottom)
     left = property(__get_left)
     right = property(__get_right)
+
+    def __str__(self):
+        return (f'({self.__x =},{self.__y=},{self.__width =},{self.__height=})')

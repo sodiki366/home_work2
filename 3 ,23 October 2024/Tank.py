@@ -1,26 +1,39 @@
 from hitbox import Hitbox
+from random import randint
 from tkinter import PhotoImage,NW
 class Tank:
     __count = 0#общее колчтчество изготовленных танка
     #__SIZE = 100
-    def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=10000000000,
+    def __AI_change_orintation(self):
+        rand = randint(0, 3)
+        if rand == 0:
+            self.left()
+        elif rand == 1:
+            self.forward()
+        elif rand == 2:
+            self.right()
+        elif rand == 3:
+            self.backward()
+    def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=100000,
                  file_up='../img/tank_up.png',
                  file_down='../img/tank_down.png',
                  file_left='../img/tank_left.png',
-                 file_right='../img/tank_right.png'  ):# init - инцилиатор
+                 file_right='../img/tank_right.png',
+                 bot=True):# init - инцилиатор
+        self.bot = bot
         self.__skin_up = PhotoImage(file=file_up)
         self.__skin_down = PhotoImage(file=file_down)
         self.__skin_left = PhotoImage(file=file_left)
         self.__skin_right = PhotoImage(file=file_right)
-        self.__hitbox=Hitbox(x, y, self.get_size(), self.get_size())
+        self.__hitbox=Hitbox(x, y, self.get_size(), self.get_size(),padding=8)
         self.__canvas = canvas#холст
         Tank.__count += 1
         self.__model = model
         self.__hp= 100
         self.__xp = 0
         self.__ammo = ammo
-        self.__fuel = 10000000000000000
-        self.__speed = speed
+        self.__fuel = 1000000
+        self.__speed = 1
         self.__x = x
         self.__y = y
 
@@ -74,6 +87,8 @@ class Tank:
 
     def update(self):
         if self.__fuel > self.__speed:
+            if self.__AI():
+                self.__AI()
             self.__fuel -= self.__speed
             self.__dx = self.__vx * self.__speed
             self.__dy = self.__vy * self.__speed
@@ -122,6 +137,11 @@ class Tank:
    # @staticmethod
     def get_size(self):
         return self.__skin_up.width()
+
+    def __AI(self):#исскуственный интилект
+        if randint(1,1) == 0:
+            self.__AI_change_orintation()
+        pass
 
 
 
