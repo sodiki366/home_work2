@@ -1,19 +1,11 @@
 from hitbox import Hitbox
 from random import randint
 from tkinter import PhotoImage,NW
+import world
 class Tank:
     __count = 0#общее колчтчество изготовленных танка
     #__SIZE = 100
-    def __AI_change_orintation(self):
-        rand = randint(0, 3)
-        if rand == 0:
-            self.left()
-        elif rand == 1:
-            self.forward()
-        elif rand == 2:
-            self.right()
-        elif rand == 3:
-            self.backward()
+
     def __init__(self,canvas,x,y,model='Т-14 Армата',ammo=100,speed=100000,
                  file_up='../img/tank_up.png',
                  file_down='../img/tank_down.png',
@@ -21,6 +13,7 @@ class Tank:
                  file_right='../img/tank_right.png',
                  bot=True):# init - инцилиатор
         self.bot = bot
+        self.__target = None
         self.__skin_up = PhotoImage(file=file_up)
         self.__skin_down = PhotoImage(file=file_down)
         self.__skin_left = PhotoImage(file=file_left)
@@ -48,13 +41,17 @@ class Tank:
         self.right()
 
 
-    def undo_move(self):
+    def __undo_move(self):
+        if self.__dx == 0 and self.__dy == 0:
+            return
         self.__x -= self.__dx
         self.__y -= self.__dy
         self.__fuel += self.__speed
         self.__update_hitbox()
         self.__repaint()
-        pass
+        self.__dx = 0
+        self.__dy = 0
+
 
 
 
@@ -95,6 +92,7 @@ class Tank:
             self.__x += self.__dx
             self.__y += self.__dy
             self.__update_hitbox()
+            self.__check_out_of_world()
             self.__repaint()
 
     def __create(self):
@@ -111,7 +109,12 @@ class Tank:
 
 
     def intersects(self, other_tank):
-        return self.__hitbox.intersects(other_tank.__hitbox)
+        value = self.__hitbox.intersects(other_tank.__hitbox)
+        if value:
+            self.__undo_move()
+            if self.bot:
+                self.__AI_change_orintation()
+        return value
 
     def get_x(self):
         return self.__x
@@ -138,15 +141,48 @@ class Tank:
     def get_size(self):
         return self.__skin_up.width()
 
+    def __AI_change_orintation(self):
+        rand = randint(0, 3)
+        if rand == 0:
+            self.left()
+        elif rand == 1:
+            self.forward()
+        elif rand == 2:
+            self.right()
+        elif rand == 3:
+            self.backward()
+
     def __AI(self):#исскуственный интилект
-        if randint(1,1) == 0:
-            self.__AI_change_orintation()
-        pass
+        if randint(1,30) == 1:
+            if randint(1,10) < 9 and self.__target is not None:
+                self.__AI_goto_target()
+            else:
+                self.__AI_change_orintation()
 
 
 
-
-
+    def set_target(self,target):
+        self.__target = target
+    def __AI_goto_target(self):
+        if randint(1,2) == 1:
+            if self.__target.get_x() < self.get_x():
+                self.left()
+            else:
+                self.right()
+        else:
+            # Вертикальное сближение
+            if self.__target.get_y() < self.get_y():
+                self.forward()
+            else:
+                self.backward()
+    def __check_out_of_world(self):
+        if self.__hitbox.left < 0 or \
+            self.__hitbox.top < 0 or \
+            self.__hitbox.right >= world.WIDTH or \
+            self.__hitbox.right >= world.HEIGHT:
+                self.__undo_move()
+                if self.__AI():
+                    self.__AI_change_orintation()
 
 
     def __str__(self):
