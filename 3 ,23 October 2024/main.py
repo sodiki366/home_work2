@@ -1,5 +1,6 @@
 from Tank import Tank
 from tkinter import *
+import world
 
 
 
@@ -15,7 +16,8 @@ def update():
     player.update()
     Enemy.update()
     check_collision(Enemy)
-    w.after(1000//FPS, update)
+
+    w.after(1000//FPS,update)
 
 def check_collision(enemy):
     player.intersects(enemy)
@@ -35,10 +37,10 @@ def key_press(event):
     check_collision(Enemy)
 w = Tk()
 w.title('Танки на минималках 2.0')
-canv = Canvas(w,width = 800,height = 600,bg = 'purple')
+canv = Canvas(w,width = world.WIDTH,height = world.HEIGHT,bg = 'alice blue')
 canv.pack()
 player = Tank(canvas = canv,x = 100,y = 50,ammo = 100,model = 'T-14 Армата',speed = 1,bot = False)
-Enemy = Tank(canvas = canv,x = 300,y = 300,ammo = 100,model = 'T-14 Армата',speed = 10,bot = True)
+Enemy = Tank(canvas = canv,x = 300,y = 300,ammo = 100,model = 'T-14 Армата',speed = 1,bot = True)
 Enemy.set_target(player)
 
 w.bind('<KeyPress>',key_press)
