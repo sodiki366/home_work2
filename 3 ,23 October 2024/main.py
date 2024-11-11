@@ -1,15 +1,12 @@
-
-
 from tank import Tank
 from tkinter import*
 import world
+
 
 KEY_LEFT = 37
 KEY_RIGHT = 39
 KEY_UP = 38
 KEY_DOWN = 40
-
-
 KEY_W = 87
 KEY_S = 83
 KEY_A = 65
@@ -18,14 +15,13 @@ KEY_D = 68
 
 FPS = 60
 def update():
-    world.set_camera_xy(player.get_x()-world.SCREEN_WIDTH//2 + player.get_sise()//2,
-                        player.get_y()-world.SCREEN_HEIGHT//2 + player.get_sise()//2)
-
     player.update()
     neutral.update()
     enemy.update()
     check_collision()
     w.after(1000//FPS, update)
+    world.set_camera_xy(player.get_x()-world.SCREEN_WIDTH//2 + player.get_sise()//2,
+                        player.get_y()- world.SCREEN_HEIGHT//2 + player.get_sise()//2)
 
 def check_collision():
     player.inersects(enemy)
@@ -44,7 +40,6 @@ def key_press(event):
 
     elif event.keycode == KEY_UP:
         world.move_camera(0,-5)
-        print('Вверх')
     elif event.keycode == KEY_DOWN:
         world.move_camera(0,5)
     elif event.keycode == KEY_LEFT:
@@ -61,8 +56,10 @@ canv.pack()
 
 player = Tank(canvas = canv, x = 100, y = 50, ammo = 100, speed=1, bot = False)
 enemy = Tank(canvas = canv, x = 300, y = 300, ammo = 100, speed=1, bot = True)
-neutral = Tank(canvas = canv, x = 300, y = 300, ammo = 100, speed=1, bot = False)
+neutral = Tank(canvas = canv, x = 300, y = 300, ammo = 100, speed=0,bot= False)
 neutral.stop()
+
+
 enemy.set_target(player)
 
 
