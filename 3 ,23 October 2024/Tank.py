@@ -14,6 +14,7 @@ class Tank:
                  file_right = '../img/tank_right.png',
 
                  bot = True):
+
     
         self.__bot = bot
         self.__target = None
