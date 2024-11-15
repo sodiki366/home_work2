@@ -57,7 +57,7 @@ canv.pack()
 player = Tank(canvas = canv, x = 100, y = 50, ammo = 100, speed=1, bot = False)
 enemy = Tank(canvas = canv, x = 300, y = 300, ammo = 100, speed=1, bot = True)
 neutral = Tank(canvas = canv, x = 300, y = 300, ammo = 100, speed=0,bot= False)
-neutral.stop()
+
 
 
 enemy.set_target(player)
