@@ -9,20 +9,13 @@ class Tank:
     __count = 0
 
     def __init__(self, canvas, x, y,model = 'Т-14 Армата', ammo = 100, speed = 10,
-                # file_up = '../img/tank_up.png',
-                 #file_down = '../img/tank_down.png',
-                # file_left = '../img/tank_left.png',
-                # file_right = '../img/tank_right.png',
+
 
                  bot = True):
 
     
         self.__bot = bot
         self.__target = None
-       # self.__skin_up = PhotoImage(file = file_up)
-       # self.__skin_down = PhotoImage(file = file_down)
-        #self.__skin_left = PhotoImage(file = file_left)
-        #self.__skin_right = PhotoImage(file = file_right)
         Tank.__count += 1
         self.__hitbox = Hitbox(x, y, self.get_sise(), self.get_sise(), padding=0)
         self.__canvas = canvas
@@ -188,8 +181,8 @@ class Tank:
     def __chek_out_of_world(self):
         if self.__hitbox.left < 0 or \
                 self.__hitbox.top < 0 or \
-                self.__hitbox.right >= world.WIDTH or \
-                self.__hitbox.bottom >= world.HEIGHT:
+                self.__hitbox.right >= world.get_width() or \
+                self.__hitbox.bottom >= world.get_height():
             self.__undo_move()
             if self.__bot:
                 self.__AI_change_orientation()

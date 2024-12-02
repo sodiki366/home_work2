@@ -16,13 +16,14 @@ KEY_D = 68
 
 
 FPS = 90
-def update():
-
+def update ():
     tank_collection.update()
     player = tank_collection.get_player()
+    world.set_camera_xy(player.get_x() - world.SCREEN_WIDTH // 2 + player.get_sise() // 2,
+                        player.get_y() - world.SCREEN_HEIGHT // 2 + player.get_sise() // 2)
+    world.update_map()
     w.after(1000//FPS, update)
-    world.set_camera_xy(player.get_x()-world.SCREEN_WIDTH//2 + player.get_sise()//2,
-                        player.get_y()- world.SCREEN_HEIGHT//2 + player.get_sise()//2)
+
 
 def check_collision():
     player.inersects(enemy)
@@ -68,7 +69,7 @@ w = Tk()
 load_textures()
 w.title('Танки на минималках 2.0')
 # 2 ширина и высота определяются через модуль world
-canv = Canvas(w, width = world.SCREEN_WIDTH, height = world.SCREEN_HEIGHT, bg = 'alice blue')
+canv = Canvas(w, width = world.SCREEN_WIDTH, height = world.SCREEN_HEIGHT, bg = '#8ccb5e')
 canv.pack()
 
 
