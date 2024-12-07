@@ -25,9 +25,8 @@ def update ():
     w.after(1000//FPS, update)
 
 
-def check_collision():
-    player.inersects(enemy)
-    enemy.inersects(player)
+
+
 
 
 def key_press(event):
