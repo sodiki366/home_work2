@@ -19,6 +19,22 @@ _canvas = None
 _map= []
 block = choice([BRICK,WATER,CONCRETE])
 AIR = 'a'
+def load_map(file_name):
+    global _map
+
+    _map = []
+    with open(file_name) as f:
+        i = 0
+
+        for line in f:
+            blocks = line.strip()
+            row = []
+            for j in range(len(blocks)):
+                cell = _Cell(_canvas, blocks[j], j * BLOCK_SIZE, i * BLOCK_SIZE)
+                row.append(cell)
+            _map.append(row)
+            i += 1
+
 def get_block(row, col):
     if row < 0 or col < 0 or row >= get_rows() or col >= get_cols():
         return AIR
@@ -50,9 +66,11 @@ def create_map(rows = 20, cols = 20):
         _map.append(row)
 
 def initialize(canv):
-    global _canvas , _map
+    global _canvas
     _canvas = canv
-    create_map(20 ,20)
+
+    #create_map(25 ,25)
+    load_map('./map/1.tmap')
 
 
 
@@ -112,6 +130,11 @@ def update_cell(row,col):
         return
     _map[row][col].update()
 
+
+
+
+
+
 class _Cell:
     def __init__(self,canvas,block,x,y):
         self.__x = x
@@ -148,6 +171,8 @@ class _Cell:
 
     def get_block(self):
         return self.__block
+
+
 
 
 
