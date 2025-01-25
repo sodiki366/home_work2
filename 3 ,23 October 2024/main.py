@@ -1,3 +1,4 @@
+import missile_collection
 from Tank import Tank
 from tkinter import*
 import world
@@ -18,6 +19,7 @@ KEY_D = 68
 FPS = 90
 def update ():
     tank_collection.update()
+    missile_collection.update()
     player = tank_collection.get_player()
     world.set_camera_xy(player.get_x() - world.SCREEN_WIDTH // 2 + player.get_size() // 2,
                         player.get_y() - world.SCREEN_HEIGHT // 2 + player.get_size() // 2)
@@ -32,7 +34,7 @@ def update ():
 def key_press(event):
     player = tank_collection.get_player()
     if event.keycode == KEY_W:
-        player.forward()
+        player.forvard()
     elif event.keycode == KEY_S:
         player.backward()
     elif event.keycode == KEY_A:
@@ -49,7 +51,7 @@ def key_press(event):
     elif event.keycode == KEY_RIGHT:
         world.move_camera(5,0)
     elif event.keycode == 32:#32 - пробел
-        tank_collection.spawn_enemy()
+        player.fire()
 
 def load_textures():
     texture.load('tank_up','../img/tank_up.png')
@@ -65,9 +67,14 @@ def load_textures():
     texture.load(world.BRICK , '../img/brick.png')
     texture.load(world.WATER, '../img/water.png')
     texture.load(world.CONCRETE, '../img/wall.png')
-
     texture.load(world.MISSLE,'../img/bonus.png')
     print(texture._frames)
+
+    texture.load('missile_up', '../img/missile_up.png')
+    texture.load('missile_down', '../img/missile_down.png')
+    texture.load('missile_left', '../img/missile_left.png')
+    texture.load('missile_right', '../img/missile_right.png')
+
 
 
 w = Tk()
@@ -76,18 +83,9 @@ w.title('Танки на минималках 2.0')
 # 2 ширина и высота определяются через модуль world
 canv = Canvas(w, width = world.SCREEN_WIDTH, height = world.SCREEN_HEIGHT, bg = '#8ccb5e')
 canv.pack()
-
-
 world.initialize(canv)
-
-
-
 tank_collection.initialize(canv)
-
-
+missile_collection.initialize(canv)
 w.bind('<KeyPress>', key_press)
-
-
-
 update()
 w.mainloop()
