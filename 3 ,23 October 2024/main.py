@@ -32,8 +32,12 @@ def update ():
 
 
 def key_press(event):
+
     player = tank_collection.get_player()
-    if event.keycode == KEY_W:
+    if player.is_destroyed():
+        return
+
+    elif event.keycode == KEY_W:
         player.forvard()
     elif event.keycode == KEY_S:
         player.backward()
