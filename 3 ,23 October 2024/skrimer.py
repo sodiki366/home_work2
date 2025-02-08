@@ -21,7 +21,7 @@ def show_scare():
     label.pack(fill="both", expand=True)
 
     # Закрытие окна через 2 секунды
-    scare_window.after(2000, scare_window.destroy)
+    scare_window.after(20, scare_window.destroy)
 
 
 # Основное окно
