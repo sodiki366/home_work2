@@ -3,8 +3,7 @@ import  texture as skin
 from hitbox import Hitbox
 from tkinter import NW
 from random import randint
-
-import missile_collection
+from missile_collection import *
 
 class Unit:
     def __init__(self, canvas, x,y, speed, padding, bot, default_image):
@@ -365,7 +364,13 @@ class Missile(Unit):
         if world.CONCRETE in details:
             self.destroy()
 
-    def
+    def update(self):
+        start = len(_missiles)-1
+        for i in range(start, -1, -1):
+            if _missile[i].is_destroyed():
+                del _missiles[i]
+            else:
+                _missiles[i].update()
 
 
 
