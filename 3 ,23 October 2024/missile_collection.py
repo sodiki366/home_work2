@@ -1,5 +1,5 @@
 from units import Missile
-
+from units import Tank
 
 _missiles = []
 _canvas = None

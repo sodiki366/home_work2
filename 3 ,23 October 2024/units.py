@@ -3,7 +3,7 @@ import  texture as skin
 from hitbox import Hitbox
 from tkinter import NW
 from random import randint
-from missile_collection import *
+import missile_collection
 
 class Unit:
     def __init__(self, canvas, x,y, speed, padding, bot, default_image):
@@ -314,6 +314,8 @@ class Tank(Unit):
             else:
                 self.backward()
                 self.fire()
+
+   
 
 class Missile(Unit):
     def __init__(self, canvas, owner):

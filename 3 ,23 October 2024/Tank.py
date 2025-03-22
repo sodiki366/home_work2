@@ -258,6 +258,8 @@ class Tank:
         except Exception:
             pass
 
+
     def __str__(self):
         return (f'координаты: x = {self.__x}, y = {self.__y}, модель: {self.__model}, '
                 f'здоровье: {self.__hp}, опыт: {self.__xp}, боеприпасы: {self.__ammo}')
+
