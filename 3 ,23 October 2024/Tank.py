@@ -1,23 +1,21 @@
 
+
 from hitbox import Hitbox
 from tkinter import *
 from random import randint
 import world
 import texture as skin
 
+
+
 class Tank:
     __count = 0
 
-    def __init__(self, canvas, x, y,model = 'Т-14 Армата', ammo = 100, speed = 10,
-
-
-                 bot = True):
-
-    
+    def __init__(self, canvas, x, y,model = 'Т-14 Армата', ammo = 100, speed = 10, bot = True):
         self.__bot = bot
         self.__target = None
         Tank.__count += 1
-        self.__hitbox = Hitbox(x, y, self.get_sise(), self.get_sise(), padding=4)
+        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=3)
         self.__canvas = canvas
         self.__model = model
         self.__hp = 100
@@ -35,44 +33,26 @@ class Tank:
             self.__x = 0
         if self.__y < 0:
             self.__y = 0
-
         self.__usual_speed = speed
         self.__water_speed = speed / 2
-
         self.__create()
         self.right()
 
-    def _AI_fire(self):
-        if self._target is None:
-            return
-        center_x = self.get_x() + self.get_size() // 2
-        center_y = self.get_y() + self.get_size() // 2
-        target_center_x = (self._target.get_x() + self._target.get_size() // 2)
-        target_center_y = (self._target.get_y() + self._target.get_size() // 2)
+        # print(self)
 
-        row = world.get_row(center_y)
-        col = world.get_col(center_x)
-        row_target = world.get_row(target_center_y)
-        col_target = world.get_col(target_center_x)
-
-        if row == row_target:
-            if col_target < col:
-                self.left()
-                self.fire()
-            else:
-                self.right()
-                self.fire()
-        elif col == col_target:
-
+#5
     def __take_ammo(self):
         self.__ammo += 10
         if self.__ammo > 100:
             self.__ammo = 100
 
+
     def __set_usual_speed(self):
         self.__speed = self.__usual_speed
+
     def __set_water_speed(self):
         self.__speed = self.__water_speed
+
 
     def __check_map_collision(self):
         details = {}
@@ -80,26 +60,19 @@ class Tank:
         result = self.__hitbox.check_map_collision(details)
         if result:
             self.__on_map_collision(details)
-    def  __on_map_collision(self,details):
+
+    def __on_map_collision(self, details):
         if world.WATER in details and len(details) == 1:
             self.__set_water_speed()
 
-        # if world.BRICK in details:
-        #     pos = details[world.BRICK]
-        #     world.destroy(pos['row'],pos['col'])
-        # if world.CONCRETE in details:
-        #     self.__undo_move()
-        #     if self.__bot:
-        #         self.__AI()
         elif world.MISSLE in details:
             pos = details[world.MISSLE]
-            if world.take(pos['row'],pos['col'])!= world.AIR:
+            if world.take(pos['row'], pos['col'])!= world.AIR:
                 self.__take_ammo()
         else:
             self.__undo_move()
             if self.__bot:
                 self.__AI_change_orientation()
-
 
 
     def set_target(self, target):
@@ -158,8 +131,12 @@ class Tank:
     def right(self):
         self.__vx = 1
         self.__vy = 0
-        self.__canvas.itemconfig(self.__id, image = skin.get('tank_right') )
+        self.__canvas.itemconfig(self.__id, image = skin.get('tank_right'))
 
+    def stop(self):
+        self.__vx = 0
+        self.__vy = 0
+        self.__undo_move()
 
     def update(self):
         if self.__fuel > self.__speed:
@@ -170,13 +147,10 @@ class Tank:
             self.__dy = self.__vy * self.__speed
             self.__x += self.__dx
             self.__y += self.__dy
-
             self.__fuel -=self.__speed
             self.__update_hitbox()
-# 4 вызов проверки выхода за границы мира
             self.__chek_out_of_world()
             self.__check_map_collision()
-
             self.__repaint()
 
 
@@ -190,18 +164,19 @@ class Tank:
         self.__dx = 0
         self.__dy = 0
 
-
     def __create(self):
-        self.__id = self.__canvas.create_image(self.__x, self.__y, image = skin.get('tank_up'), anchor ='nw')
+        self.__id = self.__canvas.create_image(self.__x, self.__y,
+                                               image = skin.get('tank_up'), anchor ='nw')
 
     def __repaint(self):
-        self.__canvas.moveto(self.__id, x = world.get_screen_x(self.__x) ,
-                             y = world.get_screen_y(self.__y) )
+        self.__canvas.moveto(self.__id,
+                             x = world.get_screen_x(self.__x),
+                             y = world.get_screen_y(self.__y))
 
     def __update_hitbox(self):
         self.__hitbox.moveto(self.__x, self.__y)
 
-    def inersects(self, other_tank):
+    def intersects(self, other_tank):
         value = self.__hitbox.intersects(other_tank.__hitbox)
         if value:
             self.__undo_move()
@@ -209,9 +184,9 @@ class Tank:
                 self.__AI_change_orientation()
         return value
 
-
     def get_x(self):
         return self.__x
+
     def get_y(self):
         return self.__y
 
@@ -237,11 +212,9 @@ class Tank:
     def grt_quantity():
         return Tank.__count
 
-
-
-    def get_sise(self):
+    def get_size(self):
         return skin.get('tank_up').width()
-# 3 проверка выхода танка за  мир
+
     def __chek_out_of_world(self):
         if self.__hitbox.left < 0 or \
                 self.__hitbox.top < 0 or \
@@ -251,6 +224,7 @@ class Tank:
             if self.__bot:
                 self.__AI_change_orientation()
 
+
     def __del__(self):
         print(f'удален танк')
         try:
@@ -258,8 +232,6 @@ class Tank:
         except Exception:
             pass
 
-
     def __str__(self):
         return (f'координаты: x = {self.__x}, y = {self.__y}, модель: {self.__model}, '
                 f'здоровье: {self.__hp}, опыт: {self.__xp}, боеприпасы: {self.__ammo}')
-
